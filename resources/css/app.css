@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.helpdesk-shell {
+    color-scheme: light;
+    background: #ffffff;
+}
+.helpdesk-shell main {
+    color: #292f2b;
+}
+@media (min-width: 1024px) {
+    html.sidebar-collapsed .helpdesk-sidebar {
+        width: 72px;
+    }
+    html.sidebar-collapsed .helpdesk-content {
+        padding-left: 72px;
+    }
+}
+.helpdesk-shell main [class*="bg-[#f"],
+.helpdesk-shell main [class*="bg-[#e"],
+.helpdesk-shell main [class*="bg-[#d"]:not([class*="bg-[#dc2626]"]) {
+    background-color: #ffffff !important;
+}
+.helpdesk-shell main [class*="border-[#"] {
+    border-color: #e1e6e2 !important;
+}
+.helpdesk-shell main .account-delete-panel {
+    border-color: #dc2626 !important;
+}
+.helpdesk-shell main [class*="text-[#"] {
+    color: #292f2b !important;
+}
+.helpdesk-shell main a[class*="text-[#"] {
+    color: #276749 !important;
+}
+.helpdesk-shell main [class*="bg-[#25577e]"],
+.helpdesk-shell main [class*="bg-[#18794e]"] {
+    background-color: #276749 !important;
+    color: #ffffff !important;
+}
+.helpdesk-shell main button[class*="bg-[#dc2626]"] {
+    background-color: #dc2626 !important;
+    color: #ffffff !important;
+}
+.helpdesk-shell main input:not([type="checkbox"]):not([type="radio"]),
+.helpdesk-shell main select,
+.helpdesk-shell main textarea {
+    border-color: #e1e6e2;
+    background-color: #ffffff;
+    color: #292f2b;
+}
+.helpdesk-shell main input::placeholder,
+.helpdesk-shell main textarea::placeholder {
+    color: #718096;
+}
+.helpdesk-shell main input:focus,
+.helpdesk-shell main select:focus,
+.helpdesk-shell main textarea:focus {
+    border-color: #276749;
+    --tw-ring-color: #276749;
+}
+.helpdesk-shell main [class*="bg-[#25577e]"]:hover,
+.helpdesk-shell main [class*="bg-[#18794e]"]:hover {
+    background-color: #1f5139 !important;
+}
+.profile-email-input:-webkit-autofill,
+.profile-email-input:-webkit-autofill:hover,
+.profile-email-input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
+    -webkit-text-fill-color: #292f2b !important;
+}
+@media print {
+    body { background: #fff !important; }
+    aside, body > div > main > header, .print\:hidden { display: none !important; }
+    main { padding: 0 !important; }
+    main > div { max-width: none !important; padding: 0 !important; }
+    section, article { box-shadow: none !important; break-inside: avoid; }
+    a { color: inherit !important; text-decoration: none !important; }
+}
