@@ -4,10 +4,10 @@
     <div class="space-y-4">
         <div class="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
             <div><h2 class="text-[17px] font-semibold tracking-tight text-[#263442]">Daftar tiket</h2><p class="mt-1 text-[11px] text-[#778594]">Cari, tinjau, dan kelola laporan dukungan teknis.</p></div>
-            <div class="flex flex-wrap gap-2"><a href="{{ route('tickets.import.create') }}" class="inline-flex h-8 items-center rounded border border-[#d8e0e7] px-3 text-[10px] font-semibold text-[#536271]">Import .CSV</a><a href="{{ route('tickets.import.history') }}" class="inline-flex h-8 items-center rounded border border-[#d8e0e7] px-3 text-[10px] font-semibold text-[#536271]">Riwayat impor</a><a href="{{ route('response-templates.index') }}" class="inline-flex h-8 items-center rounded border border-[#d8e0e7] px-3 text-[10px] font-semibold text-[#536271]">Template Respons</a></div>
+            <div class="flex flex-wrap gap-2"><a href="{{ route('response-templates.index') }}" class="inline-flex h-8 items-center rounded border border-[#d8e0e7] px-3 text-[10px] font-semibold text-[#536271]">Template Respons</a></div>
         </div>
 
-        @if (session('import_result'))<section class="border border-[#cbd9e5] bg-white p-3 text-[11px]"><p class="font-semibold text-[#263442]">Impor selesai: {{ session('import_result.created') }} tiket ditambahkan, {{ session('import_result.skipped') }} baris dilewati.</p>@if (session('import_result.rows'))<ul class="mt-2 list-inside list-disc space-y-1 text-[#64748b]">@foreach (session('import_result.rows') as $row)<li>{{ $row }}</li>@endforeach</ul>@if (session('import_result.skipped') > count(session('import_result.rows')))<p class="mt-1 text-[10px] text-[#84909c]">Rincian lainnya tidak ditampilkan.</p>@endif @endif</section>@endif
+
 
         <form method="GET" action="{{ route('tickets.index') }}" class="grid gap-2 border border-[#dfe5eb] bg-white p-3 sm:grid-cols-3 xl:grid-cols-5">
             <label class="sm:col-span-2 xl:col-span-2"><span class="sr-only">Cari tiket</span><input name="search" value="{{ $filters['search'] }}" placeholder="Cari nomor, pelapor, lokasi, masalah..." class="w-full rounded border-[#d8e0e7] py-2 text-[11px] placeholder:text-[#98a3ad]"></label>
