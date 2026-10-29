@@ -53,7 +53,13 @@ class TicketProductivityFeaturesTest extends TestCase
         $archivedList = $this->get(route('tickets.index', ['archived' => '1']));
         $archivedList->assertViewHas('filters', fn (array $filters): bool => $filters['archived'] === '1')
             ->assertSee('TKT-ARCHIVE')->assertSee('Pulihkan');
-        $this->post(route('tickets.restore', $ticket))->assertRedirect(route('tickets.show', $ticket));
+        $this->post(route('tickets.restore', $ticket))
+            ->assertRedirect(route('tickets.index', ['reset' => 1]))
+            ->assertSessionHas('ticket_feedback', 'TKT-ARCHIVE berhasil dipulihkan.');
+        $this->get(route('tickets.index', ['reset' => 1]))
+            ->assertOk()
+            ->assertSee('TKT-ARCHIVE')
+            ->assertSee('ticket-feedback-popup', false);
         $this->assertNull($ticket->fresh()->archived_at);
     }
 

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>SSH HelpDesk · Network Operations Center</title>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     <style>[x-cloak] { display: none !important; }</style>
     <script>
         try {
@@ -20,7 +21,7 @@
         <aside class="helpdesk-sidebar fixed inset-y-0 left-0 z-40 flex w-[248px] -translate-x-full flex-col border-r border-[#202923] bg-[#202923] text-white lg:translate-x-0" :class="[sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0', sidebarCollapsed ? 'lg:w-[72px]' : 'lg:w-[248px]']">
             <div class="flex h-[62px] items-center border-b border-white/10 px-4" :class="sidebarCollapsed ? 'lg:justify-center lg:px-2' : 'justify-between'">
                 <a href="{{ route('dashboard') }}" class="flex min-w-0 items-center gap-2.5">
-                    <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-[#276749] text-[11px] font-bold tracking-wide text-white">SSH</span>
+                    <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-white p-0.5"><img src="{{ asset('favicon.svg') }}" alt="" class="h-full w-full object-contain"></span>
                     <span x-show="!sidebarCollapsed" x-cloak class="min-w-0"><span class="block truncate text-[13px] font-semibold tracking-tight">SSH HelpDesk</span><span class="mt-0.5 block text-[10px] text-[#a8b7c5]">Network Operations Center</span></span>
                 </a>
                 <button @click="sidebarCollapsed = !sidebarCollapsed" class="hidden rounded p-1.5 text-[#9aabba] hover:bg-white/10 hover:text-white lg:block" :class="sidebarCollapsed ? 'lg:hidden' : ''" aria-label="Ciutkan sidebar" title="Ciutkan sidebar"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m14 6-6 6 6 6"/></svg></button>
@@ -99,10 +100,21 @@
             </header>
             <div x-cloak x-show="serverHealth === 'offline' || serverHealth === 'database-offline'" class="mx-4 mt-4 flex items-center justify-between gap-3 border border-[#fecaca] bg-[#fef2f2] px-3 py-2.5 text-[11px] text-[#991b1b] sm:mx-6" role="alert"><span x-text="serverHealth === 'database-offline' ? 'Database tidak merespons. Data mungkin tidak tersimpan sampai koneksi pulih.' : 'Koneksi ke server terputus. Periksa jaringan kantor dan coba lagi.'"></span><button type="button" @click="checkServerHealth()" class="shrink-0 font-semibold underline underline-offset-2">Coba lagi</button></div>
             <div class="mx-auto max-w-[1600px] p-4 sm:px-6 sm:py-5">
-                @if (session('ticket_feedback'))<div x-cloak x-data="{ visible: true }" x-init="setTimeout(() => visible = false, 2000)" x-show="visible" x-transition.opacity.duration.150ms class="ticket-feedback-popup fixed left-1/2 top-1/2 z-[100] flex min-h-11 max-w-[calc(100vw-2rem)] -translate-x-1/2 -translate-y-1/2 items-center gap-2.5 border border-[#cfe0d5] bg-white px-5 py-3 text-[13px] font-semibold text-[#276749] shadow-md" role="status" aria-live="polite"><svg class="h-5 w-5 shrink-0" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m4 10 4 4 8-8" /></svg>{{ session('ticket_feedback') }}</div>@endif
+                @if (session('ticket_feedback'))<div class="ticket-feedback-popup fixed left-1/2 top-1/2 z-[100] flex min-h-11 max-w-[calc(100vw-2rem)] items-center gap-2.5 border border-[#cfe0d5] bg-white px-5 py-3 text-[13px] font-semibold text-[#276749] shadow-md" role="status" aria-live="polite"><svg class="h-5 w-5 shrink-0" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m4 10 4 4 8-8" /></svg>{{ session('ticket_feedback') }}</div>@endif
                 @if (session('success'))<div class="mb-4 flex items-center gap-2 border border-[#cfe0d5] bg-[#eef5f0] px-3 py-2.5 text-[12px] text-[#426b50]"><span class="flex h-4 w-4 items-center justify-center rounded-full bg-[#d7e8dc] text-[10px]">✓</span>{{ session('success') }}</div>@endif
                 @if (session('status'))<div class="mb-4 flex items-center gap-2 border border-[#cfe0d5] bg-[#eef5f0] px-3 py-2.5 text-[12px] text-[#426b50]">{{ session('status') }}</div>@endif
                 {{ $slot }}
+            </div>
+            <div x-data="{ open: false, form: null, message: '' }" @confirm-delete.window="form = $event.detail.form; message = $event.detail.message; open = true" @keydown.escape.window="open = false; form = null" x-cloak x-show="open" x-transition.opacity class="fixed inset-0 z-[120] flex items-center justify-center bg-[#202923]/45 p-4" role="presentation">
+                <div class="absolute inset-0" @click="open = false; form = null"></div>
+                <section x-transition:enter="transition ease-out duration-200" x-transition:enter-start="translate-y-2 scale-95 opacity-0" x-transition:enter-end="translate-y-0 scale-100 opacity-100" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="translate-y-0 scale-100 opacity-100" x-transition:leave-end="translate-y-2 scale-95 opacity-0" class="relative w-full max-w-sm border border-[#d8e0e7] bg-white p-4 shadow-xl" role="dialog" aria-modal="true" aria-labelledby="delete-confirmation-title" @click.stop>
+                    <h2 id="delete-confirmation-title" class="text-[13px] font-semibold text-[#263442]">Konfirmasi hapus tiket</h2>
+                    <p class="mt-2 text-[11px] leading-5 text-[#536271]" x-text="message"></p>
+                    <div class="mt-4 flex justify-end gap-2">
+                        <button type="button" @click="open = false; form = null" class="h-8 rounded border border-[#bac6d3] bg-white px-3 text-[10px] font-semibold text-[#536271] hover:bg-[#f5f7f9]">Batal</button>
+                        <button type="button" @click="form.submit()" class="h-8 rounded bg-[#b42318] px-3 text-[10px] font-semibold text-white hover:bg-[#912018]">Ya, Hapus</button>
+                    </div>
+                </section>
             </div>
         </main>
     </div>

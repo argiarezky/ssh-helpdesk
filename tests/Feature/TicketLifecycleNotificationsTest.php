@@ -93,11 +93,12 @@ class TicketLifecycleNotificationsTest extends TestCase
         $engineer->notify(new TicketCreatedNotification($ticket));
         $engineer->notify(new TicketCreatedNotification($otherTicket));
 
-        $this->actingAs($engineer)->delete(route('tickets.destroy', $ticket))
-            ->assertRedirect(route('tickets.index'))
+        $this->withSession(['ticket_filters' => ['search' => $ticket->ticket_number]])
+            ->actingAs($engineer)->delete(route('tickets.destroy', $ticket))
+            ->assertRedirect(route('tickets.index', ['reset' => 1]))
             ->assertSessionHas('ticket_feedback', 'Ticket berhasil dihapus.');
 
-        $this->actingAs($engineer)->get(route('tickets.index'))
+        $this->actingAs($engineer)->get(route('tickets.index', ['reset' => 1]))
             ->assertOk()
             ->assertSee('Ticket berhasil dihapus.')
             ->assertSee('ticket-feedback-popup', false);
@@ -149,11 +150,24 @@ class TicketLifecycleNotificationsTest extends TestCase
         $engineer = User::factory()->engineer()->create();
         $ticket = Ticket::factory()->create(['engineer_id' => $engineer->id]);
 
-        $this->actingAs($engineer)->post(route('tickets.bulk-action'), [
-            'action' => 'delete',
-            'ticket_ids' => [$ticket->id],
-        ])->assertRedirect()
+        $this->from(route('tickets.index'))->withSession(['ticket_filters' => ['search' => $ticket->ticket_number]])
+            ->actingAs($engineer)->post(route('tickets.bulk-action'), [
+                'action' => 'delete',
+                'ticket_ids' => [$ticket->id],
+            ])->assertRedirect(route('tickets.index', ['reset' => 1]))
             ->assertSessionHas('ticket_feedback', '1 tiket berhasil dihapus.');
+    }
+
+    public function test_bulk_restore_uses_the_ticket_feedback_popup(): void
+    {
+        $engineer = User::factory()->engineer()->create();
+        $ticket = Ticket::factory()->create(['engineer_id' => $engineer->id, 'archived_at' => now()]);
+
+        $this->from(route('tickets.index'))->actingAs($engineer)->post(route('tickets.bulk-action'), [
+            'action' => 'restore',
+            'ticket_ids' => [$ticket->id],
+        ])->assertRedirect(route('tickets.index', ['reset' => 1]))
+            ->assertSessionHas('ticket_feedback', '1 tiket berhasil dipulihkan.');
     }
 
     public function test_bulk_status_changes_notify_each_assigned_engineer(): void

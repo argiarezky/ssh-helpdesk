@@ -22,7 +22,7 @@
     <div class="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
         <div>
             <p class="mb-1 text-[10px] font-semibold text-[#354555]">Ticket ID <span class="text-[#b94a48]">*</span></p>
-            <div class="flex h-8 items-center rounded border border-[#bac6d3] bg-[#f7f9fc] px-2.5 font-mono text-[10px] text-[#778594]">{{ $ticket->ticket_number ?? 'Generated automatically' }}</div>
+            <div class="ticket-field-muted flex h-8 items-center rounded border border-[#bac6d3] bg-[#f7f9fc] px-2.5 font-mono text-[10px] text-[#778594]">{{ $ticket->ticket_number ?? 'Generated automatically' }}</div>
         </div>
         <div>
             <label for="status" class="mb-1 block text-[10px] font-semibold text-[#354555]">Kanban Status <span class="text-[#b94a48]">*</span></label>
@@ -301,7 +301,7 @@
             </div>
             <div class="sm:col-span-2">
                 <label for="attachments" class="mb-1 block text-[10px] font-semibold text-[#354555]">Attachments (optional)</label>
-                <input id="attachments" name="attachments[]" type="file" multiple accept=".jpg,.jpeg,.png,.webp,.pdf" class="ticket-create-control block w-full rounded border border-[#bac6d3] px-2.5 py-1.5 text-[9px] file:mr-2 file:rounded file:border-0 file:bg-[#edf3f7] file:px-2 file:py-1 file:text-[9px] file:font-semibold">
+                <input id="attachments" name="attachments[]" type="file" multiple accept=".jpg,.jpeg,.png,.webp,.pdf" class="ticket-create-control ticket-field-muted block w-full rounded border border-[#bac6d3] px-2.5 py-1.5 text-[9px] file:mr-2 file:rounded file:border-0 file:bg-[#edf3f7] file:px-2 file:py-1 file:text-[9px] file:font-semibold">
                 <p class="mt-1 text-[8px] text-[#84909c]">JPG, PNG, WEBP, or PDF · max 10 MB per file · up to 5 files.</p>
                 @error('attachments')<p class="mt-1 text-[9px] text-[#b42318]">{{ $message }}</p>@enderror
                 @error('attachments.*')<p class="mt-1 text-[9px] text-[#b42318]">{{ $message }}</p>@enderror

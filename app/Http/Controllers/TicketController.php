@@ -261,7 +261,7 @@ class TicketController extends Controller
             $this->resequenceTicketNumbers();
         }, 5);
 
-        return redirect()->route('tickets.index')->with('ticket_feedback', 'Ticket berhasil dihapus.');
+        return redirect()->route('tickets.index', ['reset' => 1])->with('ticket_feedback', 'Ticket berhasil dihapus.');
     }
 
     public function archive(Ticket $ticket): RedirectResponse
@@ -277,7 +277,7 @@ class TicketController extends Controller
         $ticket->update(['archived_at' => null]);
         $this->recordActivity($ticket, 'restored', 'Tiket dipulihkan dari arsip.');
 
-        return redirect()->route('tickets.show', $ticket)->with('success', $ticket->ticket_number.' berhasil dipulihkan.');
+        return redirect()->route('tickets.index', ['reset' => 1])->with('ticket_feedback', $ticket->ticket_number.' berhasil dipulihkan.');
     }
 
     public function claim(Request $request, Ticket $ticket): RedirectResponse
@@ -379,7 +379,11 @@ class TicketController extends Controller
             default => $affectedCount.' tiket berhasil dihapus.',
         };
 
-        return back()->with($action === 'delete' ? 'ticket_feedback' : 'success', $message);
+        if (in_array($action, ['delete', 'restore'], true)) {
+            return redirect()->route('tickets.index', ['reset' => 1])->with('ticket_feedback', $message);
+        }
+
+        return back()->with('success', $message);
     }
 
     public function export(Request $request): StreamedResponse

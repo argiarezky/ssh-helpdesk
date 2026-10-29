@@ -7,7 +7,7 @@
                 <button type="button" onclick="window.print()" class="h-8 rounded border border-[#d8e0e7] px-3 text-[10px] font-semibold text-[#536271]">Cetak</button>
                 @if (! $ticket->archived_at)<a href="{{ route('tickets.edit', $ticket) }}" class="inline-flex h-8 items-center rounded bg-[#25577e] px-3 text-[10px] font-semibold text-white">Ubah tiket</a><form method="POST" action="{{ route('tickets.archive', $ticket) }}">@csrf<button class="h-8 rounded border border-[#d8e0e7] px-3 text-[10px] font-semibold text-[#536271]">Arsipkan</button></form>@else<form method="POST" action="{{ route('tickets.restore', $ticket) }}">@csrf<button class="h-8 rounded bg-[#25577e] px-3 text-[10px] font-semibold text-white">Pulihkan</button></form>@endif
                 @if (! $ticket->engineer_id && ! $ticket->assigned_engineer_name && ! $ticket->archived_at)<form method="POST" action="{{ route('tickets.claim', $ticket) }}">@csrf<button class="h-8 rounded border border-[#b8d2c1] px-3 text-[10px] font-semibold text-[#287044]">Ambil tiket</button></form>@endif
-                <form method="POST" action="{{ route('tickets.destroy', $ticket) }}" onsubmit="return confirm('Hapus tiket ini?')">@csrf @method('DELETE')<button class="h-8 rounded border border-[#e3c9c7] px-3 text-[10px] font-semibold text-[#a44343]">Hapus</button></form>
+                <form method="POST" action="{{ route('tickets.destroy', $ticket) }}" @submit.prevent="$dispatch('confirm-delete', { form: $el, message: 'Yakin ingin menghapus tiket {{ $ticket->ticket_number }}?' })">@csrf @method('DELETE')<button class="h-8 rounded border border-[#e3c9c7] px-3 text-[10px] font-semibold text-[#a44343]">Hapus</button></form>
             </div>
         </div>
 

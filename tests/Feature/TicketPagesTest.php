@@ -23,7 +23,9 @@ class TicketPagesTest extends TestCase
             ->assertOk()
             ->assertSee('Tiket HelpDesk')
             ->assertDontSee('Records')
-            ->assertDontSee('Workspace <span', false);
+            ->assertDontSee('Workspace <span', false)
+            ->assertSee('confirm-delete', false)
+            ->assertDontSee("confirm('Yakin ingin menghapus", false);
         $this->actingAs($engineer)->get(route('tickets.create'))
             ->assertOk()
             ->assertSee('Add New Ticket')
@@ -89,6 +91,19 @@ class TicketPagesTest extends TestCase
             ->assertSee('Save Changes');
     }
 
+    public function test_ticket_delete_uses_the_in_app_confirmation_dialog(): void
+    {
+        $engineer = User::factory()->engineer()->create();
+        $ticket = Ticket::factory()->create(['ticket_number' => 'TKT-CONFIRM-001']);
+
+        $this->actingAs($engineer)->get(route('tickets.show', $ticket))
+            ->assertOk()
+            ->assertSee('confirm-delete', false)
+            ->assertSee('Konfirmasi hapus tiket')
+            ->assertSee('Yakin ingin menghapus tiket TKT-CONFIRM-001?')
+            ->assertDontSee("confirm('Hapus tiket ini?')", false);
+    }
+
     public function test_engineer_can_assign_a_ticket_to_a_fixed_responsible_engineer_option(): void
     {
         $user = User::factory()->engineer()->create();
@@ -111,7 +126,7 @@ class TicketPagesTest extends TestCase
         $this->actingAs($user)->get(route('dashboard'))
             ->assertOk()
             ->assertSee('Ticket berhasil dibuat.')
-            ->assertSee('setTimeout(() => visible = false, 2000)', false)
+            ->assertSee('ticket-feedback-popup', false)
             ->assertSee('fixed left-1/2 top-1/2', false);
 
         $ticket = Ticket::query()->sole();
