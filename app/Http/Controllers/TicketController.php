@@ -118,7 +118,7 @@ class TicketController extends Controller
         }
         ($ticket->engineer ?? $request->user())->notify(new TicketCreatedNotification($ticket));
 
-        return redirect()->route('tickets.show', $ticket)->with('success', 'Ticket berhasil dibuat.');
+        return redirect()->route('dashboard')->with('ticket_feedback', 'Ticket berhasil dibuat.');
     }
 
     public function show(Ticket $ticket): View
@@ -134,6 +134,18 @@ class TicketController extends Controller
             'ticket' => $ticket,
             'statuses' => ['open', 'pending', 'in_progress', 'resolved', 'closed'],
             'priorities' => ['low', 'normal', 'high', 'urgent'],
+            'projects' => Ticket::query()
+                ->whereNotNull('project_name')
+                ->where('project_name', '!=', '')
+                ->distinct()
+                ->orderBy('project_name')
+                ->pluck('project_name'),
+            'issueCategories' => Ticket::query()
+                ->whereNotNull('issue_category')
+                ->where('issue_category', '!=', '')
+                ->distinct()
+                ->orderBy('issue_category')
+                ->pluck('issue_category'),
             'responseTemplates' => ResponseTemplate::query()->orderBy('title')->get(),
         ]);
     }
@@ -217,7 +229,7 @@ class TicketController extends Controller
             $ticket->engineer?->notify(new TicketStatusChangedNotification($ticket, $previousStatus));
         }
 
-        return redirect()->route('tickets.show', $ticket)->with('success', 'Perubahan tiket berhasil disimpan.');
+        return redirect()->route('tickets.show', $ticket)->with('ticket_feedback', 'Perubahan tiket berhasil disimpan.');
     }
 
     public function downloadAttachment(Ticket $ticket, TicketAttachment $attachment): StreamedResponse
@@ -249,7 +261,7 @@ class TicketController extends Controller
             $this->resequenceTicketNumbers();
         }, 5);
 
-        return redirect()->route('tickets.index')->with('success', 'Ticket berhasil dihapus.');
+        return redirect()->route('tickets.index')->with('ticket_feedback', 'Ticket berhasil dihapus.');
     }
 
     public function archive(Ticket $ticket): RedirectResponse
@@ -367,7 +379,7 @@ class TicketController extends Controller
             default => $affectedCount.' tiket berhasil dihapus.',
         };
 
-        return back()->with('success', $message);
+        return back()->with($action === 'delete' ? 'ticket_feedback' : 'success', $message);
     }
 
     public function export(Request $request): StreamedResponse

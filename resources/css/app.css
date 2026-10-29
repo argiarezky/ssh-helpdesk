@@ -50,6 +50,15 @@
     border-width: 1px;
     border-color: #b4c0cc !important;
 }
+.helpdesk-shell main .ticket-create-form .ticket-choice-box button:not([aria-pressed="true"]) {
+    color: #354555 !important;
+}
+.helpdesk-shell main .ticket-create-form .ticket-choice-box button[aria-pressed="true"] {
+    color: #ffffff !important;
+}
+.helpdesk-shell main .ticket-feedback-popup svg {
+    color: #16a34a !important;
+}
 .helpdesk-shell main .ticket-create-form button[class*="border-"] {
     border-width: 1px;
 }
@@ -89,6 +98,11 @@
 .helpdesk-shell main .ticket-create-form textarea {
     border: 1px solid #b4c0cc;
     background-color: #f7f9fc;
+}
+.helpdesk-shell main .ticket-create-form select {
+    line-height: 1;
+    padding-top: 0;
+    padding-bottom: 2px;
 }
 .helpdesk-shell main .ticket-create-form input:focus,
 .helpdesk-shell main .ticket-create-form select:focus,
