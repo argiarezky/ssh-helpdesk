@@ -14,6 +14,10 @@ class TicketPagesTest extends TestCase
     public function test_engineer_can_render_ticket_list_and_create_form(): void
     {
         $engineer = User::factory()->engineer()->create();
+        Ticket::factory()->create([
+            'project_name' => 'Network Refresh',
+            'issue_category' => 'Incident Handling',
+        ]);
 
         $this->actingAs($engineer)->get(route('tickets.index'))
             ->assertOk()
@@ -22,8 +26,15 @@ class TicketPagesTest extends TestCase
             ->assertDontSee('Workspace <span', false);
         $this->actingAs($engineer)->get(route('tickets.create'))
             ->assertOk()
-            ->assertSee('Nomor tiket')
-            ->assertSee('Dibuat otomatis setelah tiket disimpan')
+            ->assertSee('Add New Ticket')
+            ->assertSee('Ticket ID')
+            ->assertSee('Generated automatically')
+            ->assertSee('value="Network Refresh"', false)
+            ->assertSee('value="Incident Handling"', false)
+            ->assertSee('Device Issue')
+            ->assertSee('Multiple choices supported.')
+            ->assertSee('Coordinator')
+            ->assertSee('Assigned Technicians')
             ->assertSee('Ragil')
             ->assertSee('Ihsan')
             ->assertSee('Kholil')
@@ -37,7 +48,8 @@ class TicketPagesTest extends TestCase
             ->assertSee('Rasyid')
             ->assertSee('Irzam')
             ->assertDontSee('Argia Rezky Pratama')
-            ->assertSee('Catatan penanganan')
+            ->assertSee('Action Notes 1')
+            ->assertSee('Activity Summary / Resume')
             ->assertDontSee('name="ticket_number"', false);
     }
 
@@ -48,10 +60,11 @@ class TicketPagesTest extends TestCase
         $this->actingAs($user)->post(route('tickets.store'), [
             'reporter_name' => 'Faris',
             'location' => 'BKN Mataram',
-            'coordinator_name' => 'Ragil',
+            'coordinator_name' => 'Ragil, Ihsan',
             'description' => 'Router perlu pengecekan konfigurasi.',
             'assigned_engineer_name' => 'Kadek',
-            'technician_name' => 'Nalar, Hakim',
+            'technician_name' => 'Kadek, Nalar, Hakim',
+            'devices' => 'Router, Switch',
             'status' => 'open',
             'priority' => 'high',
         ])->assertRedirect();
@@ -59,7 +72,9 @@ class TicketPagesTest extends TestCase
         $ticket = Ticket::query()->sole();
 
         $this->assertSame('Kadek', $ticket->assigned_engineer_name);
-        $this->assertSame('Nalar, Hakim', $ticket->technician_name);
+        $this->assertSame('Ragil, Ihsan', $ticket->coordinator_name);
+        $this->assertSame('Kadek, Nalar, Hakim', $ticket->technician_name);
+        $this->assertSame('Router, Switch', $ticket->devices);
         $this->assertNull($ticket->engineer_id);
     }
 

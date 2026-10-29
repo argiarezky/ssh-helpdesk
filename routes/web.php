@@ -6,7 +6,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResponseTemplateController;
 use App\Http\Controllers\SystemHealthController;
 use App\Http\Controllers\TicketController;
-use App\Http\Controllers\TicketImportController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => redirect()->route('login'));
@@ -16,9 +15,6 @@ Route::middleware(['auth', 'engineer'])->group(function (): void {
     Route::get('/system/health', SystemHealthController::class)->name('system.health');
     Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::post('/tickets/bulk-action', [TicketController::class, 'bulkAction'])->name('tickets.bulk-action');
-    Route::get('/tickets/import/history', [TicketImportController::class, 'history'])->name('tickets.import.history');
-    Route::get('/tickets/import', [TicketImportController::class, 'create'])->name('tickets.import.create');
-    Route::post('/tickets/import', [TicketImportController::class, 'store'])->name('tickets.import.store');
     Route::get('/tickets/{ticket}/attachments/{attachment}/download', [TicketController::class, 'downloadAttachment'])->scopeBindings()->name('tickets.attachments.download');
     Route::delete('/tickets/{ticket}/attachments/{attachment}', [TicketController::class, 'destroyAttachment'])->scopeBindings()->name('tickets.attachments.destroy');
     Route::get('/tickets/export/excel', [TicketController::class, 'exportExcel'])->name('tickets.export.excel');

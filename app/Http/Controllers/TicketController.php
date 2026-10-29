@@ -70,6 +70,18 @@ class TicketController extends Controller
         return view('tickets.create', [
             'statuses' => ['open', 'pending', 'in_progress', 'resolved', 'closed'],
             'priorities' => ['low', 'normal', 'high', 'urgent'],
+            'projects' => Ticket::query()
+                ->whereNotNull('project_name')
+                ->where('project_name', '!=', '')
+                ->distinct()
+                ->orderBy('project_name')
+                ->pluck('project_name'),
+            'issueCategories' => Ticket::query()
+                ->whereNotNull('issue_category')
+                ->where('issue_category', '!=', '')
+                ->distinct()
+                ->orderBy('issue_category')
+                ->pluck('issue_category'),
             'responseTemplates' => ResponseTemplate::query()->orderBy('title')->get(),
         ]);
     }

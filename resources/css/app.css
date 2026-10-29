@@ -24,6 +24,41 @@
 .helpdesk-shell main [class*="border-[#"] {
     border-color: #e1e6e2 !important;
 }
+.helpdesk-shell main .ticket-create-form [class*="border-[#"] {
+    border-color: #b4c0cc !important;
+}
+.helpdesk-shell main .ticket-create-form {
+    border-width: 1px;
+    border-color: #b4c0cc !important;
+}
+.helpdesk-shell main .ticket-create-form > header {
+    border-bottom-width: 1px;
+    border-bottom-color: #b4c0cc !important;
+}
+.helpdesk-shell main .ticket-create-form [class*="border-t"] {
+    border-top-width: 1px;
+    border-top-color: #b4c0cc !important;
+}
+.helpdesk-shell main .ticket-create-form [class*="border-b"] {
+    border-bottom-width: 1px;
+    border-bottom-color: #b4c0cc !important;
+}
+.helpdesk-shell main .ticket-create-form [class*="border-[#c86d6d]"] {
+    border-color: #c86d6d !important;
+}
+.helpdesk-shell main .ticket-create-form .ticket-choice-box {
+    border-width: 1px;
+    border-color: #b4c0cc !important;
+}
+.helpdesk-shell main .ticket-create-form button[class*="border-"] {
+    border-width: 1px;
+}
+.helpdesk-shell main .ticket-create-form button[aria-pressed="true"] {
+    border-color: #276749 !important;
+}
+.helpdesk-shell main .ticket-create-form button.border-dashed {
+    border-color: #86b79b !important;
+}
 .helpdesk-shell main .account-delete-panel {
     border-color: #dc2626 !important;
 }
@@ -48,6 +83,18 @@
     border-color: #e1e6e2;
     background-color: #ffffff;
     color: #292f2b;
+}
+.helpdesk-shell main .ticket-create-form input:not([type="checkbox"]):not([type="radio"]),
+.helpdesk-shell main .ticket-create-form select,
+.helpdesk-shell main .ticket-create-form textarea {
+    border: 1px solid #b4c0cc;
+    background-color: #f7f9fc;
+}
+.helpdesk-shell main .ticket-create-form input:focus,
+.helpdesk-shell main .ticket-create-form select:focus,
+.helpdesk-shell main .ticket-create-form textarea:focus {
+    border-color: #276749;
+    --tw-ring-color: #d7e8dc;
 }
 .helpdesk-shell main input::placeholder,
 .helpdesk-shell main textarea::placeholder {
